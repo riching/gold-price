@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -43,12 +44,17 @@ public class GoldPriceCrawlerService {
 		try {
 			Document doc = Jsoup.parse(new URL(url), timeoutMillis);
 			String priceStr = doc.select("div.ks-in-tgprice > dl > dt > b").text();
+			if (StringUtils.isBlank(priceStr))
+				return;
 			double priceNum = NumberUtils.parseNumber(priceStr, Double.class);
 			if (priceNum <= 0)
 				return;
 			GoldPrice price = new GoldPrice();
 			price.setPrice(priceNum);
 			this.goldPriceDao.insert(price);
+			//如果价格高于或者低于过去24小时内的平均价格0.5以上，进行提醒
+			//TODO
+			//如果价格高于或者低于过去6小时内的平均价格0.5以上，进行提醒
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

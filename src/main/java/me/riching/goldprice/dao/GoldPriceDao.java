@@ -35,10 +35,10 @@ public class GoldPriceDao extends NamedParameterJdbcDaoSupport {
 	}
 
 	private static final String SQL_QUERY_STAT = "select max(price) as maxPrice, min(price) as minPrice, avg(price) as avgPrice, date(create_time) as date "
-			+ "from price where create_time>=? and create_time<=? and hour(create_time) between ? and ? group by 4 order by 4";
+			+ "from price where create_time>=? and create_time<=? and hour(create_time) between ? and ? and price>0 group by 4 order by 4";
 
 	private static final String SQL_QUERY_STAT_2 = "select max(price) as maxPrice, min(price) as minPrice, avg(price) as avgPrice, date(create_time) as date "
-			+ "from price where create_time>=? and create_time<=? and (hour(create_time) >= ? or hour(create_time) <= ?) group by 4 order by 4";
+			+ "from price where create_time>=? and create_time<=? and (hour(create_time) >= ? or hour(create_time) <= ?) and price>0  group by 4 order by 4";
 
 	public List<GoldPriceStat> getPriceStat(String startDate, String endDate, int startHour, int endHour) {
 		return this.getJdbcTemplate().query(startHour > endHour ? SQL_QUERY_STAT_2 : SQL_QUERY_STAT, statRowMapper,

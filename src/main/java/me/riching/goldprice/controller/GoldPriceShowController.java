@@ -26,8 +26,14 @@ public class GoldPriceShowController {
 	@Autowired
 	private GoldPriceCrawlerService crawlerService;
 
-	@RequestMapping
-	public ModelAndView index(@RequestParam(value = "page", required = false, defaultValue = "index") String page) {
+	@RequestMapping()
+	public ModelAndView index() {
+		ModelAndView mav = new ModelAndView("index");
+		return mav;
+	}
+
+	@RequestMapping("price")
+	public ModelAndView price(@RequestParam(value = "page", required = false, defaultValue = "price_line") String page) {
 		ModelAndView mav = new ModelAndView(page);
 		return mav;
 	}
@@ -67,7 +73,7 @@ public class GoldPriceShowController {
 		for (GoldPriceStat stat : stats) {
 			labels.add(stat.getDate());
 			maxPrices.add(stat.getMaxPrice());
-			minPrices.add(stat.getMminPrice());
+			minPrices.add(stat.getMinPrice());
 			avgPrices.add(new BigDecimal(stat.getAvgPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 		}
 		Map<String, Object> result = new HashMap<>();

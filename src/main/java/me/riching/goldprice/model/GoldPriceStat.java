@@ -11,7 +11,7 @@ public class GoldPriceStat implements Serializable {
 
 	private String date;
 	private double maxPrice;
-	private double mminPrice;
+	private double minPrice;
 	private double avgPrice;
 
 	public String getDate() {
@@ -30,12 +30,12 @@ public class GoldPriceStat implements Serializable {
 		this.maxPrice = maxPrice;
 	}
 
-	public double getMminPrice() {
-		return mminPrice;
+	public double getMinPrice() {
+		return minPrice;
 	}
 
-	public void setMminPrice(double mminPrice) {
-		this.mminPrice = mminPrice;
+	public void setMinPrice(double mminPrice) {
+		this.minPrice = mminPrice;
 	}
 
 	public double getAvgPrice() {

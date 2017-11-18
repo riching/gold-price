@@ -32,10 +32,9 @@
 	var data = {
 		labels : [ "start" ],
 		datasets : [ {
-			fillColor : "rgba(220,220,220,0.5)",
-			strokeColor : "rgba(220,220,220,1)",
-			pointColor : "rgba(220,220,220,1)",
-			pointStrokeColor : "#fff",
+			fill:false,
+			backgroundColor: window.chartColors.red,
+			borderColor: window.chartColors.red,
 			data : [ 1 ],
 			label : 'gold price'
 		} ]

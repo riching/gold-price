@@ -25,5 +25,8 @@
 	<bean class="me.riching.goldprice.dao.GoldPriceDao">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
+	<bean class="me.riching.goldprice.dao.WarningConditionDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
 
 </beans>
