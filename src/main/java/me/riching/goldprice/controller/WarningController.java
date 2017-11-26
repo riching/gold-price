@@ -34,8 +34,7 @@ public class WarningController {
 	}
 
 	@RequestMapping("add")
-	public String add(@RequestParam("startHour") int startHour, @RequestParam("endHour") int endHour) {
-		WarningCondition condition = new WarningCondition(startHour, endHour);
+	public String add(WarningCondition condition) {
 		this.warningConditionDao.insert(condition);
 		return "redirect:/warning/list";
 	}

@@ -14,4 +14,5 @@ public class WarningService {
 	public void SendWarning(WarningCondition con, double currentGoldPrice) {
 		logger.info("send warning con {} current price {}", con, currentGoldPrice);
 	}
+
 }

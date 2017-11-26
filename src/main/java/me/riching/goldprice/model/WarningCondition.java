@@ -14,6 +14,18 @@ public class WarningCondition implements Serializable {
 	private int startHour;
 	private int endHour;
 	/**
+	 * 1:最大值 2：最小值 3：均值
+	 */
+	private int valueType;
+	/**
+	 * 1:大于 2：小于 3：等于
+	 */
+	private int operator;
+	/**
+	 * 差值大小
+	 */
+	private double diff;
+	/**
 	 * 0:有效 1：无效
 	 */
 	private int status;
@@ -66,6 +78,42 @@ public class WarningCondition implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public int getValueType() {
+		return valueType;
+	}
+
+	public void setValueType(int valueType) {
+		this.valueType = valueType;
+	}
+
+	public int getOperator() {
+		return operator;
+	}
+
+	public void setOperator(int operator) {
+		this.operator = operator;
+	}
+
+	public double getDiff() {
+		return diff;
+	}
+
+	public void setDiff(double diff) {
+		this.diff = diff;
+	}
+
+	public boolean isMatch(double beforePrice, double currentPrice) {
+		switch (operator) {
+		case 1:
+			return currentPrice - beforePrice - diff > 0;
+		case 2:
+			return currentPrice - beforePrice + diff < 0;
+		case 3:
+			return currentPrice == (beforePrice + diff);
+		}
+		return false;
 	}
 
 }
