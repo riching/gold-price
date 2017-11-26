@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -91,9 +92,9 @@ public class GoldPriceCrawlerService {
 		}
 		IS_WARNING.set(true);
 		// 判断是否需要发送提醒
-		boolean isSendRemind = this.sendRemind();
-		if (isSendRemind)
-			RemindUtils.sendRemind("hello world");
+		String remindMsg = this.generateRemindMessage();
+		if (StringUtils.isNoneBlank(remindMsg))
+			RemindUtils.sendRemind(this.toRemindMessage(priceNum, warning, remindMsg));
 	}
 
 	/**
@@ -118,16 +119,45 @@ public class GoldPriceCrawlerService {
 	 * 
 	 * @return
 	 */
-	private boolean sendRemind() {
-		return this.cache.isIncreasing() || this.cache.isDecline() || this.cache.isCumulativeChange()
-				|| this.cache.isBigStep() || this.cache.isContinuityChangeTwice() || this.isBiggerThanBefore(10, 0.3d);
+	private String generateRemindMessage() {
+		StringBuilder sb = new StringBuilder();
+		String msg = this.cache.isIncreasing();
+		if (StringUtils.isNotEmpty(msg))
+			sb.append(msg).append('\t');
+		msg = this.cache.isDecline();
+		if (StringUtils.isNotEmpty(msg))
+			sb.append(msg).append('\t');
+		msg = this.cache.isCumulativeChange();
+		if (StringUtils.isNotEmpty(msg))
+			sb.append(msg).append('\t');
+		msg = this.cache.isBigStep();
+		if (StringUtils.isNotEmpty(msg))
+			sb.append(msg).append('\t');
+		msg = this.cache.isContinuityChangeTwice();
+		if (StringUtils.isNotEmpty(msg))
+			sb.append(msg).append('\t');
+		msg = this.isBiggerThanBefore(10, 0.3d);
+		if (StringUtils.isNotEmpty(msg))
+			sb.append(msg).append('\t');
+		return sb.toString();
 	}
 
-	private boolean isBiggerThanBefore(int timesAgo, double step) {
+	private String isBiggerThanBefore(int timesAgo, double step) {
 		List<GoldPrice> result = this.goldPriceDao.getByLimit(timesAgo, 1);
 		if (CollectionUtils.isEmpty(result))
-			return false;
-		return Math.abs(result.get(0).getPrice() - this.cache.getLast().getCurrentGoldPrice()) > step;
+			return null;
+		if (Math.abs(result.get(0).getPrice() - this.cache.getLast().getCurrentGoldPrice()) > step)
+			return "金价相比5分钟前，已上升或下降0.3";
+		return null;
+	}
+
+	public String toRemindMessage(double currentPrice, WarningCondition warningCondition, String remindMessage) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("当前金价：").append(currentPrice).append('\n');
+		sb.append("当前时间：").append(DateFormatUtils.format(Calendar.getInstance(), "yyyy-MM-dd HH:mm:ss")).append('\n');
+		sb.append("进入警戒区的原因：").append(warningCondition.toMessage()).append('\n');
+		sb.append("触发提醒的原因：").append(remindMessage);
+		return sb.toString();
 	}
 
 	public static void main(String[] args) {

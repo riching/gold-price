@@ -28,7 +28,7 @@
 					<option value="2">小于</option>
 				</select>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<span>差值</span><input type="text" name="diff"/><br/>
+				<span>差值</span><input type="text" name="differ"/><br/>
 				<input type="submit" value="添加" />
 			</form>
 		</div>
@@ -53,7 +53,7 @@
 						<td>${con.endHour }</td>
 						<td>${con.valueType == 1 ? '最大值' : '' }${con.valueType == 2 ? '最小值' : '' }${con.valueType == 3 ? '均值' : '' }</td>
 						<td>${con.operator == 1 ? '大于' : '' }${con.operator == 2 ? '小于' : '' }</td>
-						<td>${con.diff }</td>
+						<td>${con.differ }</td>
 					</tr>
 				</c:forEach>
 				<tr>

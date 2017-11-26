@@ -17,7 +17,7 @@
 		WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		GoldPriceCrawlerService priceService = context.getBean(GoldPriceCrawlerService.class);
 		out.println(priceService);
-		double price = 340;
+		double price = 370;
 		for (int i = 0; i < 10; i++) {
 			priceService.saveAndAnalysisPrice(price + i * 0.1d);
 		}

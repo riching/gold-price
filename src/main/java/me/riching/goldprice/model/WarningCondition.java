@@ -24,7 +24,7 @@ public class WarningCondition implements Serializable {
 	/**
 	 * 差值大小
 	 */
-	private double diff;
+	private double differ;
 	/**
 	 * 0:有效 1：无效
 	 */
@@ -96,24 +96,52 @@ public class WarningCondition implements Serializable {
 		this.operator = operator;
 	}
 
-	public double getDiff() {
-		return diff;
+	public double getDiffer() {
+		return differ;
 	}
 
-	public void setDiff(double diff) {
-		this.diff = diff;
+	public void setDiffer(double differ) {
+		this.differ = differ;
 	}
 
 	public boolean isMatch(double beforePrice, double currentPrice) {
 		switch (operator) {
 		case 1:
-			return currentPrice - beforePrice - diff > 0;
+			return currentPrice - beforePrice - differ > 0;
 		case 2:
-			return currentPrice - beforePrice + diff < 0;
+			return currentPrice - beforePrice + differ < 0;
 		case 3:
-			return currentPrice == (beforePrice + diff);
+			return currentPrice == (beforePrice + differ);
 		}
 		return false;
+	}
+
+	/**
+	 * 将警戒条件转化成可读的文本
+	 * 
+	 * @return
+	 */
+	public String toMessage() {
+		StringBuilder sb = new StringBuilder("当前金价");
+		if (this.operator == 1)
+			sb.append("大于");
+		else
+			sb.append("小于");
+		sb.append("过去");
+		sb.append(startHour).append("-").append(endHour).append("小时的");
+		switch (valueType) {
+		case 1:
+			sb.append("最大值");
+			break;
+		case 2:
+			sb.append("最小值");
+			break;
+		case 3:
+			sb.append("均值");
+			break;
+		}
+		sb.append("价格").append(differ);
+		return sb.toString();
 	}
 
 }

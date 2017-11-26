@@ -48,14 +48,14 @@ public class GoldPriceSnapShotCache implements Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean isIncreasing() {
+	public String isIncreasing() {
 		if (list.size() < MAX_SIZE)
-			return false;
+			return null;
 		for (int i = 0; i < MAX_SIZE - 1; i++) {
 			if (list.get(i + 1).getCurrentGoldPrice() <= list.get(i).getCurrentGoldPrice())
-				return false;
+				return null;
 		}
-		return true;
+		return "金价出现连续5次的上涨";
 	}
 
 	/**
@@ -63,14 +63,14 @@ public class GoldPriceSnapShotCache implements Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean isDecline() {
+	public String isDecline() {
 		if (list.size() < MAX_SIZE)
-			return false;
+			return null;
 		for (int i = 0; i < MAX_SIZE - 1; i++) {
 			if (list.get(i + 1).getCurrentGoldPrice() >= list.get(i).getCurrentGoldPrice())
-				return false;
+				return null;
 		}
-		return true;
+		return "金价出现连续5次的下降";
 	}
 
 	/**
@@ -78,14 +78,14 @@ public class GoldPriceSnapShotCache implements Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean isCumulativeChange() {
+	public String isCumulativeChange() {
 		int incSize = incRec.size();
-		if (incSize > 2)
-			return incRec.get(incSize - 1) - incRec.get(0) > 0.3;
+		if (incSize > 2 && (incRec.get(incSize - 1) - incRec.get(0) > 0.3))
+			return "金价累计增长超过0.3";
 		int decSize = decRec.size();
-		if (decSize > 2)
-			return decRec.get(0) - decRec.get(decSize - 1) > 0.3;
-		return false;
+		if (decSize > 2 && (decRec.get(0) - decRec.get(decSize - 1) > 0.3))
+			return "金价累计下降0.3";
+		return null;
 	}
 
 	/**
@@ -93,11 +93,11 @@ public class GoldPriceSnapShotCache implements Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean isContinuityChangeTwice() {
+	public String isContinuityChangeTwice() {
 		boolean result = false;
 		int size = list.size();
 		if (size < 3)
-			return result;
+			return null;
 		// 是否连续两次增长超过0.1
 		for (int i = size; i > size - 2; i--) {
 			if ((list.get(i - 1).getCurrentGoldPrice() - list.get(i - 2).getCurrentGoldPrice()) <= 0.1) {
@@ -106,7 +106,7 @@ public class GoldPriceSnapShotCache implements Serializable {
 			}
 		}
 		if (result)
-			return result;
+			return "金价连续两次增长超过0.1";
 		// 是否连续两次下降超过0.1
 		for (int i = size; i > size - 2; i--) {
 			if ((list.get(i - 2).getCurrentGoldPrice() - list.get(i - 1).getCurrentGoldPrice()) <= 0.1) {
@@ -114,7 +114,9 @@ public class GoldPriceSnapShotCache implements Serializable {
 				break;
 			}
 		}
-		return result;
+		if (result)
+			return "金价连续两次下降超过0.1";
+		return null;
 	}
 
 	/**
@@ -122,11 +124,13 @@ public class GoldPriceSnapShotCache implements Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean isBigStep() {
+	public String isBigStep() {
 		if (list.size() < 2)
-			return false;
+			return null;
 		int size = list.size();
-		return Math.abs(list.get(size - 1).getCurrentGoldPrice() - list.get(size - 2).getCurrentGoldPrice()) > 0.2;
+		if (Math.abs(list.get(size - 1).getCurrentGoldPrice() - list.get(size - 2).getCurrentGoldPrice()) > 0.2)
+			return "金价单次增长超过0.2";
+		return null;
 	}
 
 	/**

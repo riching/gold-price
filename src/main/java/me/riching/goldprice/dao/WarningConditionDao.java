@@ -16,7 +16,7 @@ public class WarningConditionDao extends NamedParameterJdbcDaoSupport {
 
 	public int insert(WarningCondition condition) {
 		return this.getJdbcTemplate().update(INSERT, condition.getStartHour(), condition.getEndHour(),
-				condition.getValueType(), condition.getOperator(), condition.getDiff());
+				condition.getValueType(), condition.getOperator(), condition.getDiffer());
 	}
 
 	private static final String GET = "select id, start_hour, end_hour, value_type, operator, differ, status, update_time from warning_condition where status=0";
