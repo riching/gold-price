@@ -43,6 +43,8 @@ public class GoldPriceCrawlerService {
 	private GoldPriceDao goldPriceDao;
 	@Autowired
 	private WarningConditionDao warningConditionDao;
+	@Autowired
+	private MailService mailService;
 
 	@Scheduled(cron = "*/30 * * * * ?")
 	public void crawlGoldPriceSchedule() {
@@ -65,7 +67,6 @@ public class GoldPriceCrawlerService {
 			if (priceNum <= 0)
 				return;
 			saveAndAnalysisPrice(priceNum);
-			logger.info("crawl gold price " + priceNum);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -82,7 +83,8 @@ public class GoldPriceCrawlerService {
 	public void saveAndAnalysisPrice(double priceNum) {
 		GoldPrice price = new GoldPrice();
 		price.setPrice(priceNum);
-		this.goldPriceDao.insert(price);
+		int result = this.goldPriceDao.insert(price);
+		logger.info("insert gold price to db result " + result);
 		cache.addSnapShot(new GoldPriceSnapShot(priceNum));
 		// 判断是否进入警戒区
 		WarningCondition warning = this.isWarning(priceNum);
@@ -93,8 +95,10 @@ public class GoldPriceCrawlerService {
 		IS_WARNING.set(true);
 		// 判断是否需要发送提醒
 		String remindMsg = this.generateRemindMessage();
-		if (StringUtils.isNoneBlank(remindMsg))
-			RemindUtils.sendRemind(this.toRemindMessage(priceNum, warning, remindMsg));
+		if (StringUtils.isNoneBlank(remindMsg)) {
+			this.mailService.sendHtmlMail(this.toRemindMessage(priceNum, warning, remindMsg));
+		}
+		RemindUtils.sendRemind(this.toRemindMessage(priceNum, warning, remindMsg));
 	}
 
 	/**
@@ -153,10 +157,11 @@ public class GoldPriceCrawlerService {
 
 	public String toRemindMessage(double currentPrice, WarningCondition warningCondition, String remindMessage) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("当前金价：").append(currentPrice).append('\n');
-		sb.append("当前时间：").append(DateFormatUtils.format(Calendar.getInstance(), "yyyy-MM-dd HH:mm:ss")).append('\n');
-		sb.append("进入警戒区的原因：").append(warningCondition.toMessage()).append('\n');
-		sb.append("触发提醒的原因：").append(remindMessage);
+		sb.append("<bold>当前金价：</bold>").append(currentPrice).append("<br/>");
+		sb.append("<bold>当前时间：</bold>").append(DateFormatUtils.format(Calendar.getInstance(), "yyyy-MM-dd HH:mm:ss"))
+				.append("<br/>");
+		sb.append("<bold>进入警戒区的原因：</bold>").append(warningCondition.toMessage()).append("<br/>");
+		sb.append("<bold>触发提醒的原因：</bold>").append(remindMessage).append("<br/>");
 		return sb.toString();
 	}
 

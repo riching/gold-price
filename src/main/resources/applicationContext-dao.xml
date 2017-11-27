@@ -16,17 +16,17 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/gold_price" />
-		<property name="username" value="price" />
-		<property name="password" value="8BDD0436-5586-418E-9D22-BA90ED8C4FCE" />
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
 	</bean>
-	
+
 	<bean class="me.riching.goldprice.dao.GoldPriceDao">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<bean class="me.riching.goldprice.dao.WarningConditionDao">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 </beans>
