@@ -1,8 +1,10 @@
-package me.riching.goldprice.model;
+package me.riching.goldprice.cache;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.riching.goldprice.model.GoldPriceSnapShot;
 
 public class GoldPriceSnapShotCache implements Serializable {
 
@@ -125,11 +127,14 @@ public class GoldPriceSnapShotCache implements Serializable {
 	 * @return
 	 */
 	public String isBigStep() {
-		if (list.size() < 2)
-			return null;
 		int size = list.size();
-		if (Math.abs(list.get(size - 1).getCurrentGoldPrice() - list.get(size - 2).getCurrentGoldPrice()) > 0.2)
+		if (size < 2)
+			return null;
+		double step = list.get(size - 1).getCurrentGoldPrice() - list.get(size - 2).getCurrentGoldPrice();
+		if (step > 0.2)
 			return "金价单次增长超过0.2";
+		if (step < 0.2)
+			return "金价单次下降超过0.2";
 		return null;
 	}
 

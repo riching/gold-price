@@ -30,4 +30,5 @@ public class WarningConditionDao extends NamedParameterJdbcDaoSupport {
 	public int batchDel(List<Integer> ids) {
 		return this.getNamedParameterJdbcTemplate().update(UP_STATUS, new MapSqlParameterSource("ids", ids));
 	}
+
 }

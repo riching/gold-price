@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.NumberUtils;
 
+import me.riching.goldprice.cache.GoldPriceSnapShotCache;
+import me.riching.goldprice.cache.RemindTimeCache;
 import me.riching.goldprice.dao.GoldPriceDao;
 import me.riching.goldprice.dao.WarningConditionDao;
 import me.riching.goldprice.model.GoldPrice;
 import me.riching.goldprice.model.GoldPriceSnapShot;
-import me.riching.goldprice.model.GoldPriceSnapShotCache;
 import me.riching.goldprice.model.GoldPriceStat;
 import me.riching.goldprice.model.WarningCondition;
-import me.riching.goldprice.utils.RemindUtils;
 
 @Service
 public class GoldPriceCrawlerService {
@@ -38,6 +38,8 @@ public class GoldPriceCrawlerService {
 	private static final AtomicBoolean IS_WARNING = new AtomicBoolean(false);
 
 	private GoldPriceSnapShotCache cache = new GoldPriceSnapShotCache();
+
+	private RemindTimeCache remindTimeCache = RemindTimeCache.getInstance();
 
 	@Autowired
 	private GoldPriceDao goldPriceDao;
@@ -96,9 +98,16 @@ public class GoldPriceCrawlerService {
 		// 判断是否需要发送提醒
 		String remindMsg = this.generateRemindMessage();
 		if (StringUtils.isNoneBlank(remindMsg)) {
-			this.mailService.sendHtmlMail(this.toRemindMessage(priceNum, warning, remindMsg));
+			boolean inc = remindMsg.contains("增");
+			// 如果金价是上升趋势，并且出现新高，则触发卖出提醒
+			if (inc && warning.getOperator() == 1 && this.remindTimeCache.getSoldTimes() > 0) {
+				remindTimeCache.decSold();
+				this.mailService.sendHtmlMail("金价卖出提醒", this.toRemindMessage(priceNum, warning, remindMsg));
+			}
+			if (!inc && warning.getOperator() == 2 && this.remindTimeCache.getBuyTimes() > 0) {
+				this.mailService.sendHtmlMail("金价买入提醒", this.toRemindMessage(priceNum, warning, remindMsg));
+			}
 		}
-		RemindUtils.sendRemind(this.toRemindMessage(priceNum, warning, remindMsg));
 	}
 
 	/**
@@ -150,8 +159,11 @@ public class GoldPriceCrawlerService {
 		List<GoldPrice> result = this.goldPriceDao.getByLimit(timesAgo, 1);
 		if (CollectionUtils.isEmpty(result))
 			return null;
-		if (Math.abs(result.get(0).getPrice() - this.cache.getLast().getCurrentGoldPrice()) > step)
-			return "金价相比5分钟前，已上升或下降0.3";
+		double differ = this.cache.getLast().getCurrentGoldPrice() - result.get(0).getPrice();
+		if (differ > step)
+			return "金价相比5分钟前，已上升超过" + step;
+		if (differ < -step)
+			return "金价相比5分钟前，已下降超过" + step;
 		return null;
 	}
 
