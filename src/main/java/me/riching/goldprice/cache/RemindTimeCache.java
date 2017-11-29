@@ -20,10 +20,10 @@ public class RemindTimeCache implements Serializable {
 	private static RemindTimeCache cache = new RemindTimeCache();
 
 	private AtomicInteger buyTimes = new AtomicInteger(5);
-	private AtomicInteger soldTimes = new AtomicInteger(5);
+	private AtomicInteger soldTimes = new AtomicInteger(0);
 
-	public void set(int byTimes, int soldTimes) {
-		this.buyTimes.set(byTimes);
+	public void set(int buyTimes, int soldTimes) {
+		this.buyTimes.set(buyTimes);
 		this.soldTimes.set(soldTimes);
 	}
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import me.riching.goldprice.cache.RemindTimeCache;
 import me.riching.goldprice.dao.WarningConditionDao;
 import me.riching.goldprice.model.WarningCondition;
 
@@ -25,11 +26,14 @@ public class WarningController {
 	@Autowired
 	private WarningConditionDao warningConditionDao;
 
+	private RemindTimeCache remindTimeCache = RemindTimeCache.getInstance();
+
 	@RequestMapping("list")
 	public ModelAndView list() {
 		ModelAndView mav = new ModelAndView("warning");
 		List<WarningCondition> conditions = this.warningConditionDao.get();
 		mav.addObject("list", conditions);
+		mav.addObject("remindTimeCache", remindTimeCache);
 		return mav;
 	}
 
@@ -49,6 +53,12 @@ public class WarningController {
 			int result = this.warningConditionDao.batchDel(intIds);
 			logger.info("del warning record {} result {}", Arrays.toString(ids), result);
 		}
+		return "redirect:/warning/list";
+	}
+
+	@RequestMapping("setRemindTime")
+	public String setRemindTime(@RequestParam("buyTimes") int buyTimes, @RequestParam("soldTimes") int soldTimes) {
+		this.remindTimeCache.set(buyTimes, soldTimes);
 		return "redirect:/warning/list";
 	}
 }

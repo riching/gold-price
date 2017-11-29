@@ -10,7 +10,7 @@
 <body>
 	<h1>Let's get start, go! go! go!</h1>
 	<div style="width: 75% ; margin: 50px">
-		<h1>添加警告条件</h1>
+		<h2>添加警告条件</h2>
 		<div style="margin: 30px">
 			<form action="add">
 				<span>开始时间（小时）</span><input type="text" name="startHour"/>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -60,6 +60,16 @@
 					<td colspan="7"><input type="submit" value="删除" /></td>
 				</tr>
 			</table>
+		</form>
+		<br/>
+		<br/>
+		<hr/>
+		<br/>
+		<h2>提醒次数设定</h2>
+		<form action="setRemindTime">
+			<input type="text" name="buyTimes" value="${remindTimeCache.buyTimes }"/><br/>
+			<input type="text" name="soldTimes" value="${remindTimeCache.soldTimes }"/><br/>
+			<input type="submit" value="提交修改"/>
 		</form>
 	</div>
 </body>
