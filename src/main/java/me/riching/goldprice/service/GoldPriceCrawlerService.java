@@ -98,13 +98,14 @@ public class GoldPriceCrawlerService {
 		// 判断是否需要发送提醒
 		String remindMsg = this.generateRemindMessage();
 		if (StringUtils.isNoneBlank(remindMsg)) {
-			boolean inc = remindMsg.contains("增");
+			boolean inc = remindMsg.contains("增") || remindMsg.contains("上");
 			// 如果金价是上升趋势，并且出现新高，则触发卖出提醒
 			if (inc && warning.getOperator() == 1 && this.remindTimeCache.getSoldTimes() > 0) {
 				remindTimeCache.decSold();
 				this.mailService.sendHtmlMail("金价卖出提醒", this.toRemindMessage(priceNum, warning, remindMsg));
 			}
 			if (!inc && warning.getOperator() == 2 && this.remindTimeCache.getBuyTimes() > 0) {
+				remindTimeCache.decBuy();
 				this.mailService.sendHtmlMail("金价买入提醒", this.toRemindMessage(priceNum, warning, remindMsg));
 			}
 		}
