@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.NumberUtils;
 
@@ -122,8 +123,10 @@ public class GoldPriceCrawlerService {
 			return null;
 		for (WarningCondition condition : conditions) {
 			double beforePrice = this.goldPriceDao.getByWarningCondition(condition);
-			if (condition.isMatch(beforePrice, currentPrice))
+			if (condition.isMatch(beforePrice, currentPrice)) {
+				logger.info("beforeprice {} currentprice {} condition {}", beforePrice, currentPrice, condition);
 				return condition;
+			}
 		}
 		return null;
 	}
@@ -161,6 +164,9 @@ public class GoldPriceCrawlerService {
 		if (CollectionUtils.isEmpty(result))
 			return null;
 		double differ = this.cache.getLast().getCurrentGoldPrice() - result.get(0).getPrice();
+		if (differ > step || differ < -step) {
+			logger.info("====== " + this.cache.getLast().toString() + " " + result.get(0));
+		}
 		if (differ > step)
 			return "金价相比5分钟前，已上升超过" + step;
 		if (differ < -step)
@@ -176,6 +182,12 @@ public class GoldPriceCrawlerService {
 		sb.append("<bold>进入警戒区的原因：</bold>").append(warningCondition.toMessage()).append("<br/>");
 		sb.append("<bold>触发提醒的原因：</bold>").append(remindMessage).append("<br/>");
 		return sb.toString();
+	}
+
+	@Transactional
+	public void testTranscation(GoldPrice price) {
+		this.goldPriceDao.insert(price);
+		// throw new IllegalAccessError();
 	}
 
 	public static void main(String[] args) {

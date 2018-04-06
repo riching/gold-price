@@ -43,4 +43,9 @@ public class GoldPriceSnapShot implements Serializable {
 		this.timestamp = timestamp;
 	}
 
+	@Override
+	public String toString() {
+		return "GoldPriceSnapShot [currentGoldPrice=" + currentGoldPrice + ", timestamp=" + timestamp + "]";
+	}
+
 }

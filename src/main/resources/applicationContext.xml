@@ -15,14 +15,15 @@
 	<context:property-placeholder location="classpath*:*.properties" />
 
 	<task:annotation-driven />
-	<context:component-scan base-package="me.riching.goldprice.service" />
+	<context:component-scan
+		base-package="me.riching.goldprice.service,me.riching.goldprice.dpac" />
 
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="${mail.smtp.host}" />
 		<property name="username" value="${mail.user}" />
 		<property name="password" value="${mail.password}" />
-		<property name="defaultEncoding" value="utf-8"/>
+		<property name="defaultEncoding" value="utf-8" />
 		<!-- SMTP服务器验证 -->
 		<property name="javaMailProperties">
 			<props>

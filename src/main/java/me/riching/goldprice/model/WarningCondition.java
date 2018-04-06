@@ -144,4 +144,11 @@ public class WarningCondition implements Serializable {
 		return sb.toString();
 	}
 
+	@Override
+	public String toString() {
+		return "WarningCondition [id=" + id + ", startHour=" + startHour + ", endHour=" + endHour + ", valueType="
+				+ valueType + ", operator=" + operator + ", differ=" + differ + ", status=" + status + ", updateTime="
+				+ updateTime + "]";
+	}
+
 }

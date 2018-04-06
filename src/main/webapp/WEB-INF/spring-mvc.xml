@@ -9,7 +9,7 @@
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd  
                         http://www.springframework.org/schema/mvc  
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-    <mvc:annotation-driven  />
+	<mvc:annotation-driven />
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan base-package="me.riching.goldprice.controller" />
 	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
@@ -30,23 +30,42 @@
 			</list>
 		</property>
 	</bean>
-	<!-- 定义跳转的文件的前后缀 ，视图模式配置-->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
 	</bean>
-	
-    <!-- 配置拦截器 -->
-	<!-- <mvc:interceptors>
-		<bean class="com.zbmoc.sysservice.common.filter.UserInterceptor" />
-		<bean class="com.bsc.telmed.common.filter.SessionChecker" />
-		<bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-			<property name="cacheSeconds" value="0" />
-			<property name="useExpiresHeader" value="true" />
-			<property name="useCacheControlHeader" value="true" />
-			<property name="useCacheControlNoStore" value="true" />
-			<property name="alwaysUseFullPath" value="true" />
-		</bean>
-	</mvc:interceptors> -->
+
+	<bean id="
+	freemarkerConfig "
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<!-- 模版位置，这里配置了下面就不用配了 -->
+		<property name="templateLoaderPath" value="/WEB-INF/template/" />
+		<property name="freemarkerSettings"><!-- 一些设置 -->
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="number_format">0.##########</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="classic_compatible">true</prop>
+				<prop key="template_exception_handler">ignore</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- freeMarker视图解析器 -->
+	<bean id="freemarkerViewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="viewNames" value="*.ftl" />
+		<property name="contentType" value="text/html; charset=utf-8" />
+		<property name="cache" value="false" />
+		<property name="suffix" value="" />
+		<property name="order" value="0" />
+	</bean>
+
 </beans>

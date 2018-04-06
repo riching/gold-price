@@ -38,4 +38,9 @@ public class GoldPrice implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@Override
+	public String toString() {
+		return "GoldPrice [id=" + id + ", price=" + price + ", createTime=" + createTime + "]";
+	}
+
 }
