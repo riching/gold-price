@@ -34,7 +34,7 @@ public class DpacCrawler {
 
 	private static final String URL_DPAC = "http://www.dpac.gov.cn/cpqxcj/VehicleComplaintPublicity.aspx";
 
-	private static final String RESULT_PATH = "/opt/wordpress/tousu.html";
+	private static final String RESULT_PATH = "/tmp/tousu.html";
 
 	private static final Random random = new Random();
 
@@ -47,7 +47,7 @@ public class DpacCrawler {
 		Map<String, String> data = new HashMap<>();
 		data.put("__EVENTTARGET", "pagelist");
 		data.put("__EVENTARGUMENT", "1");
-		for (int i = 2; i < 6; i++) {
+		for (int i = 2; i < 3; i++) {
 			try {
 				Connection conn = Jsoup.connect(URL_DPAC);
 				conn.data(data);
@@ -61,10 +61,8 @@ public class DpacCrawler {
 				int index = 0;
 				for (Element line : lines) {
 					index++;
-					if (index == 1)
-						continue;
-					if (justFord() && StringUtils.indexOf(line.child(2).text(), "福特") < 0
-							&& StringUtils.indexOf(line.child(2).text(), "长安") < 0)
+					if (index <3) continue;
+					if (justFord() && StringUtils.indexOf(line.child(2).text(), "福特") < 0 && StringUtils.indexOf(line.child(2).text(), "长安") < 0)
 						continue;
 					Element nameElement = line.child(0);
 					nameElement.text(nameElement.child(0).val());
@@ -106,29 +104,32 @@ public class DpacCrawler {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Map<String, String> data = new HashMap<>();
-		data.put("__EVENTTARGET", "pagelist");
-		for (int i = 2; i < 5; i++) {
-			Connection conn = Jsoup.connect(URL_DPAC);
-			conn.data(data);
-			Document doc = conn.post();
-			String __VIEWSTATE = doc.getElementById("__VIEWSTATE").val();
-			String __VIEWSTATEGENERATOR = doc.getElementById("__VIEWSTATEGENERATOR").val();
-			String __EVENTVALIDATION = doc.getElementById("__EVENTVALIDATION").val();
-
-			Element table = doc.getElementById("tdRepeater");
-			System.out.println("==== " + i);
-			System.out.println(table.child(0).child(1));
-			try {
-				Thread.sleep(2000);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-
-			data.put("__EVENTARGUMENT", i + "");
-			data.put("__VIEWSTATE", __VIEWSTATE);
-			data.put("__VIEWSTATEGENERATOR", __VIEWSTATEGENERATOR);
-			data.put("__EVENTVALIDATION", __EVENTVALIDATION);
-		}
+		// Map<String, String> data = new HashMap<>();
+		// data.put("__EVENTTARGET", "pagelist");
+		// for (int i = 2; i < 5; i++) {
+		// Connection conn = Jsoup.connect(URL_DPAC);
+		// conn.data(data);
+		// Document doc = conn.post();
+		// String __VIEWSTATE = doc.getElementById("__VIEWSTATE").val();
+		// String __VIEWSTATEGENERATOR =
+		// doc.getElementById("__VIEWSTATEGENERATOR").val();
+		// String __EVENTVALIDATION = doc.getElementById("__EVENTVALIDATION").val();
+		//
+		// Element table = doc.getElementById("tdRepeater");
+		// System.out.println("==== " + i);
+		// System.out.println(table.child(0).child(1));
+		// try {
+		// Thread.sleep(2000);
+		// } catch (Exception e) {
+		// logger.error(e.getMessage(), e);
+		// }
+		//
+		// data.put("__EVENTARGUMENT", i + "");
+		// data.put("__VIEWSTATE", __VIEWSTATE);
+		// data.put("__VIEWSTATEGENERATOR", __VIEWSTATEGENERATOR);
+		// data.put("__EVENTVALIDATION", __EVENTVALIDATION);
+		// }
+		DpacCrawler dc = new DpacCrawler();
+		dc.crawDpac();
 	}
 }

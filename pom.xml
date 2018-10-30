@@ -128,60 +128,6 @@
 			<version>2.3.23</version>
 		</dependency>
 		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.5.12</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.itextpdf/font-asian -->
-		<!-- https://mvnrepository.com/artifact/com.itextpdf/itext-asian -->
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itext-asian</artifactId>
-			<version>5.2.0</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-pdf-itext5</artifactId>
-			<version>9.1.9</version>
-		</dependency>
-		<dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.core</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
-			<version>2.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.17</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-scratchpad</artifactId>
-			<version>3.17</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.17</version>
-		</dependency>
-		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>

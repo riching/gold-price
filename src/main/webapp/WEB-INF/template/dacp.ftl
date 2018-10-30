@@ -66,6 +66,9 @@
 		<td>维权群：539685520</td>
 	</tr>
 	<tr>
+		<td><a href="http://www.sohu.com/a/253184622_136712">2018年9月份的Y车评，蒙迪欧依然臭味严重</a></td>
+	</tr>
+	<tr>
 		<td><a href="http://mp.weixin.qq.com/s?__biz=MzA4MjU5Mjg5NA==&mid=2651335768&idx=1&sn=4ab1940373bdf9f6ed25b4a6a9f5b8c7&chksm=847fd949b308505ffee135efdbde9d700c51969e080cd9675a5f2bdeb914d197293623816263&mpshare=1&scene=23&srcid=0325PcKsmEOklxCmGZ7sA4IM#rd">蒙迪欧是如何从畅销车变成滞销车的？</a></td>
 	</tr>
 </table>
